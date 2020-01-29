@@ -6,7 +6,7 @@ VERSION=$(cat /etc/os-release |grep -Po "VERSION_CODENAME=\K\w+")
 sed -i  "$a deb http://ftp.de.debian.org/debian $VERSION main" /etc/apt/sources.list
 apt update
 
-apt install -y libpcre3-dev asciidoc libmbedcrypto3 libmbedtls-dev libsodium-dev libc-ares-dev libev-dev 
+apt install -y build-essential libpcre3-dev asciidoc libmbedcrypto3 libmbedtls-dev libsodium-dev libc-ares-dev libev-dev 
 if [ $? -ne 0 ];then
 	exit 1
 fi
