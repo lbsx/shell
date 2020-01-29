@@ -2,12 +2,15 @@
 
 download_link=https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.4/shadowsocks-libev-3.3.4.tar.gz
 
-
-apt install -y libpcre3-dev asciidoc libmbedcrypto3 libmbedtls-dev libsodium-dev libc-ares-dev libev-dev 
-
 VERSION=$(cat /etc/os-release |grep -Po "VERSION_CODENAME=\K\w+")
 sed -i  "$a deb http://ftp.de.debian.org/debian $VERSION main" /etc/apt/sources.list
 apt update
+
+apt install -y libpcre3-dev asciidoc libmbedcrypto3 libmbedtls-dev libsodium-dev libc-ares-dev libev-dev 
+if [ $? -ne 0 ];then
+	exit 1
+fi
+
 ip=$(ip a |grep inet|grep brd | grep -oP "inet \K([0-9]{1,3}[.]){3}[0-9]{1,3}")
 cat >>config.json <<EOF 
 {
