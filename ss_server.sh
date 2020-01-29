@@ -4,7 +4,9 @@ download_link=https://github.com/shadowsocks/shadowsocks-libev/releases/download
 
 
 apt install -y libpcre3-dev asciidoc libmbedcrypto3 libmbedtls-dev libsodium-dev libc-ares-dev libev-dev 
-sed -i  '$a deb http://ftp.de.debian.org/debian buster main' /etc/apt/sources.list
+
+VERSION=$(cat /etc/os-release |grep -Po "VERSION_CODENAME=\K\w+")
+sed -i  "$a deb http://ftp.de.debian.org/debian $VERSION main" /etc/apt/sources.list
 apt update
 ip=$(ip a |grep inet|grep brd | grep -oP "inet \K([0-9]{1,3}[.]){3}[0-9]{1,3}")
 cat >>config.json <<EOF 
