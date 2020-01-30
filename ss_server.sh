@@ -36,4 +36,5 @@ if [ $? -eq 0 ];then
 	make 
 	make install 
 fi
+cd ..
 nohup ss-server -c config.json
