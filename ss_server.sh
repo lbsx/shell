@@ -2,11 +2,19 @@
 
 download_link=https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.4/shadowsocks-libev-3.3.4.tar.gz
 
-VERSION=$(cat /etc/os-release  |grep -Po "PRETTY_NAME=.*\(\K\w+")
-sed -i  "$a deb http://ftp.de.debian.org/debian $VERSION main" /etc/apt/sources.list
-apt update
+if which apt;then
+    VERSION=$(cat /etc/os-release  |grep -Po "PRETTY_NAME=.*\(\K\w+")
+    sed -i  "$a deb http://ftp.de.debian.org/debian $VERSION main" /etc/apt/sources.list
+    apt update
 
-apt install -y build-essential libpcre3-dev asciidoc libmbedcrypto* libmbedtls-dev libsodium-dev libc-ares-dev libev-dev 
+    apt install -y build-essential libpcre3-dev asciidoc libmbedcrypto* libmbedtls-dev libsodium-dev libc-ares-dev libev-dev 
+else
+   yum groupinstall development tools
+   yum install epel-release
+   yum update
+   yum install -y pcre-devel xmlto libblockdev-crypto-devel asciidoc c-ares-devel libev-devel libblockdev-crypto-devel libsodium-devel mbedtls-devel
+   
+fi
 if [ $? -ne 0 ];then
 	exit 1
 fi
