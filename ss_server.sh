@@ -9,8 +9,8 @@ if which apt;then
 
     apt install -y build-essential libpcre3-dev asciidoc libmbedcrypto* libmbedtls-dev libsodium-dev libc-ares-dev libev-dev 
 else
-   yum groupinstall development tools
-   yum install epel-release
+   yum groupinstall -y development tools
+   yum install -y epel-release
    yum update
    yum install -y pcre-devel xmlto libblockdev-crypto-devel asciidoc c-ares-devel libev-devel libblockdev-crypto-devel libsodium-devel mbedtls-devel
    
@@ -20,7 +20,7 @@ if [ $? -ne 0 ];then
 fi
 
 ip=$(ip a |grep inet|grep brd | grep -oP "inet \K([0-9]{1,3}[.]){3}[0-9]{1,3}")
-cat >>config.json <<EOF 
+cat >config.json <<EOF 
 {
     "server":"$ip",
     "mode":"tcp_and_udp",
