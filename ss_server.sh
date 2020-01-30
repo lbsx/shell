@@ -2,7 +2,7 @@
 
 download_link=https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.4/shadowsocks-libev-3.3.4.tar.gz
 
-VERSION=$(cat /etc/os-release |grep -Po "VERSION_CODENAME=\K\w+")
+VERSION=$(cat /etc/os-release  |grep -Po "PRETTY_NAME=.*\(\K\w+")
 sed -i  "$a deb http://ftp.de.debian.org/debian $VERSION main" /etc/apt/sources.list
 apt update
 
