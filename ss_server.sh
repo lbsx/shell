@@ -45,4 +45,25 @@ if [ $? -eq 0 ];then
 	make install 
 fi
 cd ..
+
+# change TCP Congestion Avoidance Algorithm 
+# check linux kernel veresion > 4.9
+kernel_version=$(uname -r |cut -d- -f1)
+greater_num=$(echo "4.9 $kernel_version" |tr " " "\n"|sort -rV|head -1)
+if [[ $greater_num == $kernel_version ]];then
+    sed -i '/net.core.default_qdisc/d' /etc/sysctl.conf
+    sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
+    echo "net.core.default_qdisc = fq" >> /etc/sysctl.conf
+    echo "net.ipv4.tcp_congestion_control = bbr" >> /etc/sysctl.conf
+    sysctl -p >/dev/null 2>&1
+    
+    param=$(sysctl net.ipv4.tcp_congestion_control | awk '{print $3}')
+    if [[ $param == bbr ]];then
+    	echo "INFO: Setting TCP BBR completed..."
+    fi
+    
+else
+    echo "ERROR: Your kernel version is less than 4.9, can't set bbr algorithm"
+fi
+
 nohup ss-server -c config.json
