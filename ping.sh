@@ -1,9 +1,11 @@
 #!/bin/bash
+temp_file=temp.txt
+echo -n > $temp_file
 ping_func(){
 	IP=$1
 	ping -c 1 -w 1 $IP  >/dev/null 2>&1
 	if [ $? -eq 0 ];then
-		echo  $IP
+		echo  $IP >> $temp_file
 	fi
 }
 gateway=$1
@@ -20,4 +22,6 @@ while true;do
 	fi
 	sleep 1
 done
+cat $temp_file |sort -n
+rm -rf $temp_file
 exit 0

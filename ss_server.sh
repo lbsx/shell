@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e 
 download_link=https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.4/shadowsocks-libev-3.3.4.tar.gz
 
 if which apt;then
@@ -14,9 +14,6 @@ else
    yum update
    yum install -y pcre-devel xmlto libblockdev-crypto-devel asciidoc c-ares-devel libev-devel libblockdev-crypto-devel libsodium-devel mbedtls-devel
    
-fi
-if [ $? -ne 0 ];then
-	exit 1
 fi
 
 ip=$(ip a |grep inet|grep brd | grep -oP "inet \K([0-9]{1,3}[.]){3}[0-9]{1,3}")
@@ -40,14 +37,13 @@ echo $tar_file
 cd ${tar_file%.*.*}
 echo "current dir:$(pwd)"
 ./configure
-if [ $? -eq 0 ];then
-	make 
-	make install 
-fi
+make 
+make install 
 cd ..
 
 # change TCP Congestion Avoidance Algorithm 
 # check linux kernel veresion > 4.9
+set +e
 kernel_version=$(uname -r |cut -d- -f1)
 greater_num=$(echo "4.9 $kernel_version" |tr " " "\n"|sort -rV|head -1)
 if [[ $greater_num == $kernel_version ]];then
