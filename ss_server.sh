@@ -1,4 +1,5 @@
 #!/bin/bash
+# https://www.linuxbabe.com/ubuntu/shadowsocks-libev-proxy-server-ubuntu
 set -e 
 download_link=https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.4/shadowsocks-libev-3.3.4.tar.gz
 
