@@ -1,14 +1,15 @@
 #!/bin/bash
 # https://www.linuxbabe.com/ubuntu/shadowsocks-libev-proxy-server-ubuntu
 set -e 
-download_link=https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.4/shadowsocks-libev-3.3.4.tar.gz
+download_link=https://github.com/shadowsocks/shadowsocks-libev/releases/download/v3.3.5/shadowsocks-libev-3.3.5.tar.gz
 
 if which apt;then
     VERSION=$(cat /etc/os-release  |grep -Po "PRETTY_NAME=.*\(\K\w+")
-    sed -i  "$a deb http://ftp.de.debian.org/debian $VERSION main" /etc/apt/sources.list
+    echo "VERSION: $VERSINO"
+    sed -i  "a deb http://ftp.de.debian.org/debian $VERSION main" /etc/apt/sources.list
     apt update
 
-    apt install -y build-essential libpcre3-dev asciidoc libmbedcrypto* libmbedtls-dev libsodium-dev libc-ares-dev libev-dev 
+    apt install -y build-essential psmisc libpcre3-dev asciidoc libmbedcrypto* libmbedtls-dev libsodium-dev libc-ares-dev libev-dev 
 else
    yum groupinstall -y development tools
    yum install -y epel-release
@@ -63,4 +64,20 @@ else
     echo "ERROR: Your kernel version is less than 4.9, can't set bbr algorithm"
 fi
 
-nohup ss-server -c config.json
+cat > /lib/systemd/system/ssserver.service << EOF
+[Unit]
+Description=ss-server
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=ss-server -c /root/config.json
+ExecReload=killall ss-server
+
+[Install]
+WantedBy=multi-user.target
+Alias=ssserver.service
+EOF
+systemctl enable ssserver
+systemctl restart ssserver
+systemctl status ssserver
